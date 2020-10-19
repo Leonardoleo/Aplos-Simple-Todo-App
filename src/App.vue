@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <h1 class="ui dividing centered header">
-      ToDo Tasks Activity Board
+      Aplos
     </h1>
     <span class="_today">
       {{ dateToday }}
@@ -47,6 +47,7 @@
       <div class="column">
         <list-completed-todos
           :todos="completedTodos"
+          @edit-todo="edit-todo"
           @delete-todo="deleteTodo"
         />
       </div>

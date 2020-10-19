@@ -9,6 +9,7 @@
       :todo.sync="todo"
       :index.sync="index"
       :key="todo.dateCreated"
+      @edit-todo="edit-todo"
       @delete-todo="deleteTodo"
     />
   </div>
@@ -30,6 +31,9 @@ export default {
     }
   },
   methods: {
+    editTodo(todo) {
+      this.$emit('edit-todo', todo);
+    },
     deleteTodo(todo) {
       this.$emit('delete-todo', todo);
     }
