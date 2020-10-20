@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <h1 class="ui dividing centered header">
-      Aplos
+      Aplos - Simple TodoApp board
     </h1>
     <span class="_today">
       {{ dateToday }}

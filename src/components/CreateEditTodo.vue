@@ -1,5 +1,5 @@
 <template>
-  <div class="ui basic content right aligned segment">
+  <div class="ui basic content center aligned segment">
     <button
       v-show="!showForm && !isEdit"
       class="ui basic button icon"

@@ -31,4 +31,4 @@ npm start
 
 ## Screen capture
 
-![screen capture of ToDo App](./screencapture-todo-app.jpg)
+![screen capture of ToDo App](./Aplos-Simple TodoApp board.png)

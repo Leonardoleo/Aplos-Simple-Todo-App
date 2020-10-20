@@ -7240,7 +7240,7 @@ a.ui.inverted.grey.header:hover {
 }
 
 .ui.right.aligned.header {
-    text-align: right;
+    text-align: center;
 }
 
 .ui.centered.header,
