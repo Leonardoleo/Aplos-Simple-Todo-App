@@ -34,4 +34,6 @@ npm start
 ![screen capture of ToDo App](./aplos-simple-todoapp-board.jpg)
 
 Update info:
-The deployment on vercel is not ready yet though the production is active at enviroments.
+The deployment on vercel is not ready yet though the production is active at enviroments. Its just for testing purpose. 
+
+This app is under prototype.
