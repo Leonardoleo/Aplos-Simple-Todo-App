@@ -37,3 +37,5 @@ Update info:
 The deployment on vercel is not ready yet though the production is active at enviroments. Its just for testing purpose. 
 
 This app is under prototype.
+
+It's open source. Anyone can contribute this project n share ideas to make new features.
