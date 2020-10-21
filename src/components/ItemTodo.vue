@@ -94,6 +94,7 @@
       @cancel-edit="cancelEdit"
       @edit-todo-warning="editTodoWarning"
     />
+    
   </div>
 </template>
 
@@ -142,7 +143,7 @@
     data() {
       return {
         isEditing: false,
-        isCollapsed: !!this.initCollapsed && true,
+        isCollapsed: !!this.initCollapsed && false,
         STATUS: app.constants.STATUS
       };
     },
@@ -225,7 +226,7 @@
         this.origTodo = Object.assign({}, this.todo);
       },
       editTodo(mod) {
-        this.isEditing = false;
+        this.isEditing = true;
         this.$emit('edit-todo', {todo:this.todo, mod:mod});
       },
       cancelEdit() {

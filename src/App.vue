@@ -47,8 +47,8 @@
       <div class="column">
         <list-completed-todos
           :todos="completedTodos"
-          @edit-todo="edit-todo"
           @delete-todo="deleteTodo"
+          @edit-todo="edit-todo"
         />
       </div>
     </div>

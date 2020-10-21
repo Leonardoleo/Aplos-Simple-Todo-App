@@ -9,8 +9,9 @@
       :todo.sync="todo"
       :index.sync="index"
       :key="todo.dateCreated"
-      @edit-todo="edit-todo"
       @delete-todo="deleteTodo"
+      @edit-todo="edit-todo"
+      
     />
   </div>
 </template>
