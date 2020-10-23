@@ -27,24 +27,23 @@ var storage = {
 // keeping practices - and, typically, in this case, the user is presented
 // with a dialog to allow more storage).
 try {
-    sessionStorage.removeItem('TEST');
-    sessionStorage.setItem('TEST', '1');
-    sessionStorage.removeItem('TEST');
+    sessionStorage.removeItem("TEST");
+    sessionStorage.setItem("TEST", "1");
+    sessionStorage.removeItem("TEST");
     storage.supportsSessionStorage = true;
 } catch (e) {
     storage.supportsSessionStorage = false;
 }
 try {
-    localStorage.removeItem('TEST');
-    localStorage.setItem('TEST', '1');
-    localStorage.removeItem('TEST');
+    localStorage.removeItem("TEST");
+    localStorage.setItem("TEST", "1");
+    localStorage.removeItem("TEST");
     storage.supportsLocalStorage = true;
 } catch (e) {
     storage.supportsLocalStorage = false;
 }
-storage.supportsDaStorage = storage.supportsSessionStorage && storage.supportsLocalStorage;
-
-
+storage.supportsDaStorage =
+    storage.supportsSessionStorage && storage.supportsLocalStorage;
 
 /*
  *************************************
@@ -53,24 +52,33 @@ storage.supportsDaStorage = storage.supportsSessionStorage && storage.supportsLo
  */
 
 /* cookie helper functions - can be used as fallback for localStorage (default 1 year expiry unless isSession==true) */
-storage.setInCookie = function(key, value, isSession, expHours, domain, path, secure) {
+storage.setInCookie = function(
+    key,
+    value,
+    isSession,
+    expHours,
+    domain,
+    path,
+    secure
+) {
     var expStr;
-    var hours = (typeof expHours != "undefined") ? expHours : 365 * 24;
+    var hours = typeof expHours != "undefined" ? expHours : 365 * 24;
     var date = new Date();
     var domainStr = domain ? "; Domain=" + domain : "";
     var pathStr = path ? "; Path=" + path : "; Path=/";
     var secureStr = secure ? "; secure" : "";
-    date.setTime(date.getTime() + (hours * 60 * 60 * 1000));
+    date.setTime(date.getTime() + hours * 60 * 60 * 1000);
     expStr = isSession ? "" : "; Expires=" + date.toGMTString();
-    document.cookie = key + "=" + value + domainStr + expStr + pathStr + secureStr;
+    document.cookie =
+        key + "=" + value + domainStr + expStr + pathStr + secureStr;
 };
 
 storage.getFromCookie = function(key) {
     var keyDel = key + "=";
-    var cind = document.cookie.split(';');
+    var cind = document.cookie.split(";");
     for (var i = 0, l = cind.length; i < l; i++) {
         var c = cind[i];
-        while (c.charAt(0) === ' ') {
+        while (c.charAt(0) === " ") {
             c = c.substring(1, c.length);
         }
         if (c.indexOf(keyDel) === 0) {
@@ -88,7 +96,12 @@ storage.expireCookie = function(key, cookieDomain) {
     this.setInCookie(key, "", false, -1000, cookieDomain);
     if (cookieDomain.match(/\.[^.]+\.[^.]+\./)) {
         //clear parent domain as well;
-        this.setInCookie(key, "", false, -1000, cookieDomain.replace(/\.[^.]+/, ""));
+        this.setInCookie(
+            key,
+            "",
+            false, -1000,
+            cookieDomain.replace(/\.[^.]+/, "")
+        );
     }
 };
 
@@ -108,10 +121,9 @@ storage.setType = function(type) {
 
 // enable undo functionality
 storage.enableUndo = function(bool) {
-    bool = (bool === undefined) ? true : bool;
+    bool = bool === undefined ? true : bool;
     this._enableUndo = bool;
 };
-
 
 /*
  * storage functions: `key` (string), `value` (string or json object). All
@@ -127,7 +139,7 @@ storage.setItem = function(key, value, type, exp) {
     var jsonv;
     var success = false;
     var dastorage = this._getDaStorage(type);
-    var timestamp = (new Date()).getTime();
+    var timestamp = new Date().getTime();
     key = this._getKeyName(key);
     this._setUndo(key, type);
 
@@ -153,7 +165,10 @@ storage.setItem = function(key, value, type, exp) {
             // QUESTION: Should this be placed in try-catch? If so, what would
             // the recovery action be? Clear the whole cache? Clear oldest
             // item(s) untill action succeeds?
-            if (typeof dastorage.setItem !== "undefined" && dastorage.removeItem !== "undefined") {
+            if (
+                typeof dastorage.setItem !== "undefined" &&
+                dastorage.removeItem !== "undefined"
+            ) {
                 //to prevent "quota exceeded" errors on iPad, the storage item needs to be removed before updating;
                 dastorage.removeItem(key);
                 dastorage.setItem(key, jsonvStr);
@@ -181,12 +196,16 @@ storage.getItem = function(key, type, dastorage) {
             jsonvStr = dastorage[key];
         }
     }
-    if (typeof JSON !== "undefined" && typeof jsonvStr !== "undefined" && jsonvStr !== null) {
+    if (
+        typeof JSON !== "undefined" &&
+        typeof jsonvStr !== "undefined" &&
+        jsonvStr !== null
+    ) {
         // perform a sanity check to ensure this value was set by storage and
         // can be parsed safely
         if (jsonvStr.indexOf("^^_ts_^^") !== -1) {
             jsonv = JSON.parse(jsonvStr.replace(/\^\^/g, '"'));
-            if (jsonv._exp_ && (new Date()).getTime() > jsonv._exp_) {
+            if (jsonv._exp_ && new Date().getTime() > jsonv._exp_) {
                 // value has expired
                 jsonv = null;
                 // remove it
@@ -224,7 +243,7 @@ storage.getLength = function(type, dastorage) {
     var length;
     var size = function(obj) {
         if (obj == null) return 0;
-        return (obj.length === +obj.length) ? obj.length : Object.keys(obj).length;
+        return obj.length === +obj.length ? obj.length : Object.keys(obj).length;
     };
     dastorage = dastorage || this._getDaStorage(type);
     if (dastorage.length !== undefined) {
@@ -310,28 +329,31 @@ storage.undoItem = function(key, type) {
 
 // internal method to determine storage type
 storage._getType = function(type) {
-        return type || this._type || "session";
-    }
-    // internal method to derive key name
+    return type || this._type || "session";
+};
+// internal method to derive key name
 storage._getKeyName = function(key) {
-        return key.replace(/ /g, '');
-    }
-    // internal method to determine property name for undo item value
+    return key.replace(/ /g, "");
+};
+// internal method to determine property name for undo item value
 storage._getUndoPropName = function(key, type) {
-        type = this._getType(type);
-        return '_undo_' + type + '_' + key;
-    }
-    // internal method to store undo value
+    type = this._getType(type);
+    return "_undo_" + type + "_" + key;
+};
+// internal method to store undo value
 storage._setUndo = function(key, type) {
     if (this._enableUndo) {
         var undoPropName = this._getUndoPropName(key, type);
         storage[undoPropName] = this.getItem(key, type);
     }
-}
+};
 
 // internal method to determine if cookie should be used for storage
 storage._shouldUseCookie = function(type) {
-    return type === "cookie" || (!this._hasSupportedStorageType(type) && this.fallbackToCookie);
+    return (
+        type === "cookie" ||
+        (!this._hasSupportedStorageType(type) && this.fallbackToCookie)
+    );
 };
 // internal method to get one of the three storage types.
 // (or auto fallback to memoryStore)
@@ -339,18 +361,24 @@ storage._getDaStorage = function(type) {
     type = this._getType(type);
     switch (type) {
         case "local":
-            return this._hasSupportedStorageType(type) ? localStorage : this.memoryStore._localStorage;
+            return this._hasSupportedStorageType(type) ?
+                localStorage :
+                this.memoryStore._localStorage;
         case "session":
-            return this._hasSupportedStorageType(type) ? sessionStorage : this.memoryStore._sessionStorage;
+            return this._hasSupportedStorageType(type) ?
+                sessionStorage :
+                this.memoryStore._sessionStorage;
         case "memory":
             return this.memoryStore;
     }
 };
 // internal method to test if "local" or "session" storage type is supported
 storage._hasSupportedStorageType = function(type) {
-    return ((type === "local" && this.supportsLocalStorage) || (type === "session" && this.supportsSessionStorage));
+    return (
+        (type === "local" && this.supportsLocalStorage) ||
+        (type === "session" && this.supportsSessionStorage)
+    );
 };
-
 
 // Convience methods for localStorage and sessionStorage
 // There are no convenience methods for type "memory" and "cookie" because
@@ -415,10 +443,12 @@ storage.undoSessionItem = function(key) {
 };
 
 // on initialization, clear any expired items from browser Storage
-if (storage.clearExpiredLocal) { storage.clearExpired("local"); }
+if (storage.clearExpiredLocal) {
+    storage.clearExpired("local");
+}
 // the sessionStorage is most likely empty, but run clearExpired just in case
-if (storage.clearExpiredSession) { storage.clearExpired("session"); }
-
-
+if (storage.clearExpiredSession) {
+    storage.clearExpired("session");
+}
 
 export default storage;
